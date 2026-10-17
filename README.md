@@ -6,7 +6,8 @@ Dette repoet inneholder brain og er nok her det vil være mest utvikling.
 
 TRENING
 =======
-Må lage egne bin-filer for å trene hjernen.
+Trening kjøres via `cli`-binæren i rust_boardgame_bin
+(`cli train`, `cli evolve`, `cli rank`, `cli report`).
 Strategier er:
 tilfeldig
 tilfeldig avvik

@@ -2,13 +2,9 @@
 * LOGIC GATE NEURAL NETWORK!
 */
 use crate::player::*;
-//use get_terminal_state_from_bit_state;
 use crate::player::brain::lg_diamond::*;
 use crate::player::brain::*;
 use boardgame_game::game::get_terminal_state_from_bit_state;
-//use boardgame_game::game::get_active_player_from_bit_state;
-use boardgame_game::game::Game;
-
 use boardgame_game::game::TerminalState;
 use log::{debug, warn};
 use std::collections::HashMap;
@@ -109,7 +105,7 @@ impl Agentish for PlayerNNDiamond {
 
 impl Brainy for PlayerNNDiamond {
     type MyBrain = BrainDiamond;
-    fn evaluate_bit_state(&self,_game: &Game, bit_state: &Vec<bool>) -> usize {
+    fn evaluate_bit_state<T: Playable>(&self, _game: &T, bit_state: &Vec<bool>) -> usize {
         self.brain.evaluate_bit_state(bit_state)
     }
 

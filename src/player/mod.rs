@@ -7,7 +7,6 @@ pub mod random;
 
 use crate::player::brain::LogicGatesError;
 use boardgame_game::game::GameStatic;
-use boardgame_game::game::Game;
 use boardgame_game::game::Playable;
 use std::fmt::Display;
 
@@ -31,6 +30,6 @@ pub trait Agentish {
 
 pub trait Brainy {
     type MyBrain;
-    fn evaluate_bit_state(&self, game: &Game, bit_state: &Vec<bool>) ->usize;
+    fn evaluate_bit_state<T: Playable>(&self, game: &T, bit_state: &Vec<bool>) -> usize;
     fn get_brain(&self) -> Self::MyBrain;
 }

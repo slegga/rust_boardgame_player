@@ -5,20 +5,16 @@ use crate::player::brain::lg_diamond::*;
 use crate::player::brain::*;
 use crate::player::Agentish;
 use crate::player::Brainy;
-//use boardgame_game::game::*;
 
 use boardgame_game::game::get_active_player_from_bit_state;
 use log::{debug, info, trace, warn};
-//use rand::Rng;
 use boardgame_game::game::get_terminal_state_from_bit_state;
 use boardgame_game::game::GameStatic;
 use boardgame_game::game::Playable;
-use boardgame_game::game::Game;
 use log::Level::{Info, Trace};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::Debug;
-// use std::intrinsics::mir::place;
 use std::time::{Duration, Instant};
 
 #[derive(Clone, Debug)]
@@ -167,7 +163,7 @@ impl Agentish for PlayerNNDiamondTS {
 }
 
 impl Brainy for PlayerNNDiamondTS {
-    fn evaluate_bit_state(&self, game: &Game, bit_state: &Vec<bool>) -> usize {
+    fn evaluate_bit_state<T: Playable>(&self, game: &T, bit_state: &Vec<bool>) -> usize {
 
         let mut states = vec![];
 
