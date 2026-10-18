@@ -98,7 +98,7 @@ impl BrainDiamond {
                     for gate in 0..CELL_SIZE {
                         let bit_a = current_bit_state[layer[cell].address_a[gate]];
                         let bit_b = current_bit_state[layer[cell].address_b[gate]];
-                        next_bit_state[gate] = match layer[cell].operator[gate] {
+                        next_bit_state[cell * CELL_SIZE + gate] = match layer[cell].operator[gate] {
                             BitOp::FALSE => false, //         0 False 0                       0  0  0  0
                             BitOp::AND => bit_a & bit_b, // 1 A ∧ B A · B                   0  0  0  1
                             BitOp::ANDANB => bit_a & !bit_b, // 2 ¬(A ⇒ B) A − AB               0  0  1  0
@@ -316,7 +316,7 @@ impl BrainDiamond {
                 panic!("self.layers[layer].len()> cell. Should be {} > {}. gate_id = {}, num_tot_cells={}, layer={}",
                     self.layers[layer].len(), cell, gate_id,num_tot_cells,layer );
             }
-            self.layers[layer][cell as usize].operator[gate_id] = match rng.gen_range(1..15) {
+            self.layers[layer][cell as usize].operator[gate_id] = match rng.gen_range(0..16) {
                 0 => BitOp::FALSE,  //         0 False 0                       0  0  0  0
                 1 => BitOp::AND,    // 1 A ∧ B A · B                   0  0  0  1
                 2 => BitOp::ANDANB, // 2 ¬(A ⇒ B) A − AB               0  0  1  0
@@ -367,7 +367,7 @@ impl BrainDiamond {
                     for gate in 0..CELL_SIZE {
                         let bit_a = current_bit_state[layer[cell].address_a[gate]];
                         let bit_b = current_bit_state[layer[cell].address_b[gate]];
-                        next_bit_state[gate] = match layer[cell].operator[gate] {
+                        next_bit_state[cell * CELL_SIZE + gate] = match layer[cell].operator[gate] {
                             BitOp::FALSE => false, //         0 False 0                       0  0  0  0
                             BitOp::AND => bit_a & bit_b, // 1 A ∧ B A · B                   0  0  0  1
                             BitOp::ANDANB => bit_a & !bit_b, // 2 ¬(A ⇒ B) A − AB               0  0  1  0

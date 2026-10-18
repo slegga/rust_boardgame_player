@@ -11,3 +11,7 @@ log = "0.4.22"
 rand = "0.8.5"
 thiserror = "2.0.9"
 boardgame_game = { path = "../rust_boardgame_game" }
+
+[features]
+# parallel root expansion batch using std scoped threads (game type must be Sync)
+ts_par = []

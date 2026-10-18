@@ -98,6 +98,7 @@ impl Agentish for PlayerNNDiamond {
                 },
             }
             self.brain = brain;
+            self.is_loaded = true;
         }
         Ok(())
     }
