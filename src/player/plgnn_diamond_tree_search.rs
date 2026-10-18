@@ -237,9 +237,10 @@ impl SearchTree {
         }
     }
 
-    /// Register a computed child state under `parent`, reusing a transposition
-    /// hit when present. Returns (node index, value from the child player's
-    /// perspective) for backup.
+    /// Register a computed child state under `parent` as a fresh node whose
+    /// parent pointer is `parent` (nodes are never shared across parents, so
+    /// backprop follows the right branch). Returns (node index, value from
+    /// the child player's perspective) for backup.
     fn add_child<T: Playable>(
         &mut self,
         ctx: &Ctx<T>,
@@ -248,18 +249,6 @@ impl SearchTree {
         child_state: Vec<bool>,
     ) -> (usize, f32) {
         let h = hash_state(&child_state);
-        if let Some(&idx) = self.tt.get(&h) {
-            if self.arena[idx].bit_state.as_slice() == child_state.as_slice() {
-                let child = &self.arena[idx];
-                let value = if child.visits > 0 {
-                    child.wins / child.visits as f32
-                } else {
-                    child.prior
-                };
-                self.link_child(parent, col, idx);
-                return (idx, value);
-            }
-        }
         let is_terminal = get_terminal_state_from_bit_state(&child_state).is_some();
         // Tree edge parity: every edge in the tree is exactly one move, so
         // the player to move toggles every level. Do NOT use the state's turn
@@ -294,7 +283,7 @@ impl SearchTree {
         self.arena.push(node);
         let idx = self.arena.len() - 1;
         self.tt.entry(h).or_insert(idx);
-        self.arena[parent].children.push((col, idx));
+        self.link_child(parent, col, idx);
         (idx, value)
     }
 
@@ -314,13 +303,8 @@ impl SearchTree {
         let mut node = self.root;
         loop {
             if self.arena[node].is_terminal {
-                // terminal leaf: its stable value is wins/visits
-                let n = &self.arena[node];
-                let v = if n.visits > 0 {
-                    n.wins / n.visits as f32
-                } else {
-                    n.prior
-                };
+                // terminal leaf: backprop the true terminal value (win/loss/draw)
+                let v = Self::state_value(ctx, &self.arena[node].bit_state, self.arena[node].player);
                 self.backprop(node, v);
                 return;
             }
